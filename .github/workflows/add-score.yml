@@ -31,8 +31,51 @@ jobs:
       - name: Mettre à jour scores.json
         run: |
           node -e '
+            const
+
+Voici exactement quoi faire :
+
+1. Va sur https://github.com/cestseba/visualchat-scores/edit/main
+   /.github/workf
+2. Sélectionne tout (Ctrl+A dans l'éditeur) et supprime
+3. Colle exactement ceci (identique à avant, seule l'étape "Committer" a changé) :
+
+name: Ajouter un score
+on:
+  issues:
+    types: [opened]
+permissions:
+  contents: write
+  issues: write
+jobs:
+  add-score:
+    if: startsWith(github.event.issue.title, 'SCORE:')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extraire et valider
+        id: parse
+        uses: act
+        with:
+          script: |
+            const repoUrl = context.payload.issue.title.replace('SCORE:', '').trim();
+            let b
+            try { body = JSON.parse(context.payload.issue.body || '{}'); }
+            catch { core.setFailed('Corps de l\'issue illisible (JSON attendu).'); return; }
+            const { pseudo, score, gameName } = body;
+            if (!repoUrl || typeof pseudo !== 'string' || !pseudo.trim() || typeof score !== 'number' || !Number.isFinite(score)) {
+              core.setFailed('Champs invalides.'); return;
+            }
+            core.setOutput('repoUrl', repoUrl);
+            core.setOutput('pseudo', pseudo.trim().slice(0, 40));
+            core.setOutput('score', String(score));
+            core.setOutput('gameName', gameName || '');
+      - name: Met
+        run: |
+          node -e '
             const fs = require("fs");
-            const repoUrl = process.env.REPO_URL, pseudo = process.env.PSEUDO;
+            const repoUrl = process.env.REPO_URL, pseudo =
+process.env.PSEUD
             const score = Number(process.env.SCORE), gameName = process.env.GAME_NAME;
             const scores = fs.existsSync("scores.json") ? JSON.parse(fs.readFileSync("scores.json","utf8")) : {};
             if (!Array.isArray(scores[repoUrl])) scores[repoUrl] = [];
@@ -46,16 +89,18 @@ jobs:
           PSEUDO: ${{ steps.parse.outputs.pseudo }}
           SCORE: ${{ steps.parse.outputs.score }}
           GAME_NAME: ${{ steps.parse.outputs.gameName }}
-      - name: Committer
+      - name: Com
+        env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_N.number }}
         run: |
           git config user.name "visualchat-scores-bot"
-          git config user.email "actions@github.com"
-          git add scores.json
-          git diff --cached --quiet || git commit -m "Score: ${{ github.event.issue.title }} (#${{ github.event.issue.number }})"
+          git config user.email "actions@github.com"                 git add
+          git diff --cached --quiet || git commit -m "Score: $ISSUE_TITLE (#$ISSUE_NUMBER)"
           git push
       - name: Fermer l'issue
         uses: actions/github-script@v7
         with:
           script: |
-            await github.rest.issues.update({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, state: 'closed' });
-            await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body: 'Score enregistré ✅' });
+            await github.rest.issues.update({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.num
+            await github.rest.issues.createComment({ owner:    context.repo.ownessue_number:context.issue.number, body: 'Score enregistré ✅' });
