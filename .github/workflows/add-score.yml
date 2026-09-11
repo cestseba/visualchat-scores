@@ -22,73 +22,42 @@ jobs:
             catch { core.setFailed('Corps de l\'issue illisible (JSON attendu).'); return; }
             const { pseudo, score, gameName } = body;
             if (!repoUrl || typeof pseudo !== 'string' || !pseudo.trim() || typeof score !== 'number' || !Number.isFinite(score)) {
-              core.setFailed('Champs invalides.'); return;
+              cor.'); return;
             }
             core.setOutput('repoUrl', repoUrl);
-            core.setOutput('pseudo', pseudo.trim().slice(0, 40));
-            core.re));
+            core.setOutput('pseudo', pseudo.trim().slice(0, 40));            core.re));
             core.setOutput('gameName', gameName || '');
       - name: Mettre à jour scores.json
         run: |
           node -e '
-            const
+            const fs = require("fs");
             const repoUrl = process.env.REPO_URL, pseudo = process.env.PSEUDO;
-            const score = Number(process.env.SCORE), gameName = process.env.GAME_NAME;
-            constes.json") ?JSON.parse(fs.readFileSync("scores.json","utf8")) : {};
-            if (!Array.isArray(scores[repoUrl])) scores[repoUrl]
-= [];
+            const score = Number(process.env.SCORE), gameName = process.env.GAME_NAME;                                                       constes.json") ?JSON.parse(fs.readFileSync("scores.json","utf8")) : {};
+            if (!Array.isArray(scores[repoUrl])) scores[repoUrl] = [];
             scores[repoUrl].push({ pseudo, score, gameName, date: new Date().toISOString() });
-            scoreore - a.score);
+            scores[repoUrl].sort((a,b) => b.score - a.score);
             scores[repoUrl] = scores[repoUrl].slice(0, 100);
             fs.writeFileSync("scores.json",
 JSON.stringify(sc
           '
         env:
-          REPO_URL: ${{ steps.parse.outputs.repoUrl }}
+          REPO_URpoUrl }}
           PSEUDO: ${{ steps.parse.outputs.pseudo }}
           SCORE: ${{ steps.parse.outputs.score }}
           GAME_NAameName }}
       - name: Committer
         env:
-          ISSUE_Ttitle }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           git config user.name "visualchat-scores-bot"
-          git conb.com"
+          git config user.email "actions@github.com"
           git add scores.json
-          git diff --cached --quiet || git commit -m "Score: $ISSUE_TITLE (#$ISSUE_NUMBER)"
+          git difmit -m "Score:$ISSUE_TITLE (#$ISSUE_NUMBER)"
           git push
-      - name: Fermer l'issue
+      - name: Fer
         uses: actions/github-script@v7
         with:
           script: |
-            awaitowner:context.repo.owner, repo: context.repo.repo, issue_number:
-context.issue.num
-            await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body: 'Score enregistré ✅' });
-            const scores = fs.existsSync("scores.json") ? JSON.parse(fs.readFileSync("scores.json","utf8")) : {};
-            if (!Array.isArray(scores[repoUrl])) scores[repoUrl]
-= [];
-            scores[repoUrl].push({ pseudo, score, gameName, date: new Date().toISOString() });
-            scores[repoUrl].sort((a,b) => b.score - a.score);
-            scores[repoUrl] = scores[repoUrl].slice(0, 100);
-            fs.writeFileSync("scores.json", JSON.stringify(scores, null, 2) + "\n");
-          '
-        env:
-          REPO_URpoUrl }}
-          PSEUDO: ${{ steps.parse.outputs.pseudo }}
-          SCORE:  }}
-          GAME_NAME: ${{ steps.parse.outputs.gameName }}
-      - name: Committer
-        env:
-          ISSUE_TITLE: ${{ github.event.issue.title }}
-          ISSUE_N.number }}
-        run: |
-          git config user.name "visualchat-scores-bot"
-          git conb.com"
-          git add scores.json                                  git difmit -m "Score:$ISSUE_TITLE (#$ISSUE_NUMBER)"
-          git push
-      - name: Fermer l'issue
-        uses: actions/github-script@v7                       with:
-          script: |
-            await github.rest.issues.update({ owner: context.repo.ownessue_number:context.issue.number, state: 'closed' });
-            awaitment({ owner:context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body: 'Score enregistré ✅' });
+            await github.rest.issues.update({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.num
+            await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.num✅' });
