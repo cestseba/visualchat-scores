@@ -34,7 +34,7 @@ jobs:
             const fs = require("fs");
             const repoUrl = process.env.REPO_URL, pseudo = process.env.PSEUDO;
             const score = Number(process.env.SCORE), gameName = process.env.GAME_NAME;
-            const scores = fs.existsSync("scores.json") ? JSON.parse(fs.readFileSync("scores.json","utf8")) : {
+            const scores = fs.existsSync("scores.json") ? JSON.parse(fs.readFileSync("scores.json","utf8")) : {};
             if (!Array.isArray(scores[repoUrl])) scores[repoUrl] = [];
             scores[repoUrl].push({ pseudo, score, gameName, date: new Date().toISOString() });
             scores[repoUrl].sort((a,b) => b.score - a.score);
